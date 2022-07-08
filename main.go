@@ -38,7 +38,7 @@ func main() {
 	inputFolder := flag.String("i", "./input", "Input folder")
 	fileType := flag.String("t", "jpeg,jpg,raf", "Type of file to process (enter extensions separated by commas)")
 	outputFolder := flag.String("o", "./output", "Output folder (Directory the folders will be created in)")
-	recursive := flag.Bool("r", false, "Includes any files found in the input subfolders")
+	recursive := flag.Bool("r", false, "recursive: Includes any files found in the input subfolders")
 
 	fileTypeArr, err := verifyFlags(inputFolder, outputFolder, fileType, recursive)
 	if err != nil {
