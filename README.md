@@ -7,7 +7,7 @@ Little CLI based photo organiser that was made because I'm too lazy to organize 
 How to run:
 ```shell
 go build .
-photoManager.exe -i ./inputFolder -o ./outputFolder -r -t jpeg,jpg,raw,dng,raf
+photoManager.exe -i ./inputFolder -o ./outputFolder -r -t jpeg,jpg,raw,dng,raf -threads 10
 ```
 
 flags
