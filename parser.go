@@ -1,15 +1,33 @@
 package main
 
 import (
+	"github.com/rwcarlsen/goexif/exif"
+	"github.com/schollz/progressbar/v3"
 	"os"
 	"path/filepath"
-	"syscall"
 	"time"
 )
+
+func parserProgressBar(ch <-chan CounterType, len int) {
+	fileBar := progressbar.Default(int64(len))
+
+	for cType := range ch {
+		switch cType {
+		case File:
+			fileBar.Add(1)
+		}
+	}
+
+	fileBar.Finish()
+}
 
 type Parser struct{}
 
 func (p *Parser) Parse(srcs []string, dstFolder string) ([]*Copy, error) {
+	ch := make(chan CounterType)
+	defer close(ch)
+	go parserProgressBar(ch, len(srcs))
+
 	var copies []*Copy
 
 	for _, src := range srcs {
@@ -20,33 +38,32 @@ func (p *Parser) Parse(srcs []string, dstFolder string) ([]*Copy, error) {
 		dst = filepath.Join(dstFolder, dst)
 
 		copies = append(copies, NewCopy(src, dst))
+		ch <- File
 	}
 
 	return copies, nil
 }
 
 func (p *Parser) parseFile(src string) (string, error) {
-	// gets file metadata
-	fInfo, err := os.Stat(src)
+	f, err := os.Open(src)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+
+	x, err := exif.Decode(f)
 	if err != nil {
 		return "", err
 	}
 
-	fData := fInfo.Sys().(*syscall.Win32FileAttributeData)
-
-	eTime := earliestTime(fData.CreationTime.Nanoseconds(), fData.LastWriteTime.Nanoseconds())
-	pTime := time.Unix(0, eTime)
-
-	toDir := p.timeToDirName(pTime)
-
-	return filepath.Join(toDir, fInfo.Name()), nil
-}
-
-func earliestTime(a, b int64) int64 {
-	if a < b {
-		return a
+	bTime, err := x.DateTime()
+	if err != nil {
+		return "", err
 	}
-	return b
+
+	toDir := p.timeToDirName(bTime)
+
+	return filepath.Join(toDir, filepath.Base(src)), nil
 }
 
 func (p *Parser) timeToDirName(t time.Time) string {

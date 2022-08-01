@@ -2,21 +2,22 @@ package main
 
 import (
 	"fmt"
-	"github.com/fatih/color"
+	"github.com/gookit/color"
+	"time"
 )
 
 func LogError(method, msg string) {
-	color.Red("ERROR : [%s] %s", method, msg)
+	color.Error.Printf("[%s] ERROR : [%s] %s\n", time.Now().Format("15:04:05.000"), method, msg)
 }
 
 func LogInfo(method, msg string) {
-	color.Blue("INFO : [%s] %s", method, msg)
+	color.Info.Printf("[%s] INFO : [%s] %s\n", time.Now().Format("15:04:05.000"), method, msg)
 }
 
 func LogSuccess(method, msg string) {
-	color.Green("SUCCESS : [%s] %s", method, msg)
+	color.Success.Printf("[%s] SUCCESS : [%s] %s\n", time.Now().Format("15:04:05.000"), method, msg)
 }
 
 func FormatError(method string, err error) error {
-	return fmt.Errorf("%s : %s", method, err)
+	return fmt.Errorf("[%s] : %s", method, err)
 }
