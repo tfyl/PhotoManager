@@ -12,8 +12,9 @@ photoManager.exe -i ./inputFolder -o ./outputFolder -r -t jpeg,jpg,raw,dng,raf
 
 flags
 ```
--i: input folder
--o: output folder
--r: recursive (will search subfolders)
--t: file types to search for (comma separated)
+-i: input folder (required)
+-o: output folder (required)
+-r: recursive (will search subfolders, optional)
+-t: file types to search for (comma separated, required)
+-threads: number of threads to use (defaults to 5, optional)
 ```
