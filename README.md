@@ -1,6 +1,6 @@
 # PhotoManager
 
-Little CLI based photo organiser that was made because I'm too lazy to organize my photos.
+Little CLI based photo organiser that was made because I'm too lazy to organize my photos into folders organised by date.
 
 ## Note: Should work cross-platform now due to exif support.
 
